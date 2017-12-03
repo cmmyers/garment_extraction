@@ -1,0 +1,8 @@
+*.pyc
+*.csv
+*.jpg
+*.png
+*.js
+notebooks-testing/
+.DS_Store
+.ipynb_checkpoints
