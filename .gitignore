@@ -6,3 +6,4 @@
 notebooks-testing/
 .DS_Store
 .ipynb_checkpoints
+*private*
