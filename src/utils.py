@@ -14,6 +14,24 @@ def bgr_to_rgb(image):
     return cv2.merge((r, g, b))
 
 
+def make_palette_uniform_width(colors, title=None, figsize=(8,4)):
+    plt.figure(figsize=figsize)
+    start = 0
+    cur = start
+    if len(colors) > 0:
+        w = 1./len(colors)
+        for c in colors:
+            plt.axvspan(cur, cur+w, color=c)
+            cur += w
+        plt.title(title)
+        plt.axis([0, 1, 0, 1])
+        plt.axis('off')
+        plt.show()
+    else:
+        print 'color list has length 0'
+
+
+
 def get_background_one_image(filepath, num_points = 16):
     background_colors = []
     im = plt.imread(filepath)
