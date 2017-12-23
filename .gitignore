@@ -3,7 +3,9 @@
 *.jpg
 *.png
 *.js
+*.ipynb
 notebooks-testing/
+data/
 .DS_Store
 .ipynb_checkpoints
 *private*
