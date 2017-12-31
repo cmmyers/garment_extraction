@@ -2,4 +2,4 @@
 
 Content
 
-link[[www.google.com]]
+[[link]](www.google.com)
