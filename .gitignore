@@ -1,7 +1,5 @@
 *.pyc
 *.csv
-*.jpg
-*.png
 *.js
 *.ipynb
 notebooks-testing/
