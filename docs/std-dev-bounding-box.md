@@ -1,6 +1,6 @@
-# Using color range means and standard deviations to find boundaries of figure
+# Exploring standard deviation and mean of color channels
 
-I wanted to see whether I could use summary statistics of the color distribution of slices of runway images to predict the boundaries of the figure. I rationalized that the color distribution for each vertical slice at the far left and far right of the image would be fairly constant, since the background of the image tends to be a consistent color or colors from left to right. Then, once we hit the figure, the standard deviation should spike, because new colors are being introduced to the slice. The mean of each color channel should also change, though we can't know whether it will increase or decrease.
+I am interested in exploring whether summary statistics of the color distribution of slices of runway images would be useful features in my garment extraction model.
 
 I split the image into BGR color channels (the convention used by `OpenCV`) and found the standard deviation and average of each channel. I did the same for a grayscale version of the image.
 
@@ -67,6 +67,11 @@ def show_image_and_std_devs(image, rows=False, grayscale=False):
     plt.show()
 
 ```
+
+Unsurprisingly, the left-to-right plots are largely symmetrical and there are marked changes at the left and right boundaries of the figures.
+
+Since there are other methods to approximately locate the figure in runway images (by identifying the size and location of the face, or even just guessing that the figure takes up roughly the middle third of the image), I am more interested in using this information to better understand the color relationship between the background and the figure.
+
 <div>
 <table>
   <tr>
@@ -94,23 +99,23 @@ def show_image_and_std_devs(image, rows=False, grayscale=False):
 
   <tr>
     <td rowspan="4">averages</td>
-    <td><img src="img/std-dev-color-cols-1.png" alt=""></td>
-    <td><img src="img/std-dev-color-cols-2.png" alt=""></td>
+    <td><img src="img/avgs-color-cols-1.png" alt=""></td>
+    <td><img src="img/avgs-color-cols-2.png" alt=""></td>
 
   </tr>
   <tr>
-  <td><img src="img/std-dev-color-rows-1.png" alt=""></td>
-  <td><img src="img/std-dev-color-rows-2.png" alt=""></td>
+  <td><img src="img/avgs-color-rows-1.png" alt=""></td>
+  <td><img src="img/avgs-color-rows-2.png" alt=""></td>
 
   </tr>
   <tr>
-  <td><img src="img/std-dev-grey-cols-1.png" alt=""></td>
-  <td><img src="img/std-dev-grey-cols-2.png" alt=""></td>
+  <td><img src="img/avgs-grey-cols-1.png" alt=""></td>
+  <td><img src="img/avgs-grey-cols-2.png" alt=""></td>
 
   </tr>
   <tr>
-  <td><img src="img/std-dev-grey-rows-1.png" alt=""></td>
-  <td><img src="img/std-dev-grey-rows-2.png" alt=""></td>
+  <td><img src="img/avgs-grey-rows-1.png" alt=""></td>
+  <td><img src="img/avgs-grey-rows-2.png" alt=""></td>
 
   </tr>
 
