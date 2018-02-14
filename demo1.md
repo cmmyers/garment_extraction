@@ -1,3 +1,9 @@
+---
+layout: default
+title:  "Test"
+
+---
+
 # Simple Background Extraction
 
 A clear first step toward isolating the garment is to remove the background. Most runway photos have a relatively simple background, although they can become cluttered by other models and audience members. Another complication is that the color of the garment can be similar to the color of the background.
