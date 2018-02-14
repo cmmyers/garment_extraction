@@ -1,2 +1,1 @@
-# garment_extraction
-various methods toward creating an ensemble garment extraction model
+view content at https://claremarie.github.io/garment_extraction/
