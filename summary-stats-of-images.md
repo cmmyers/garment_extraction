@@ -4,6 +4,7 @@ title:  "Exploring summary statistics of image data"
 
 ---
 
+# Exploring summary statistics of image data
 
 I am interested in exploring whether summary statistics of the color distribution of slices of runway images would be useful features in my garment extraction model.
 

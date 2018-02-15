@@ -4,6 +4,8 @@ title:  "Background Removal, Step 1"
 
 ---
 
+# Background Removal, Step 1
+
 
 All code is from a stripped-down version of my CompositeMask class; code [here](github.link)
 
