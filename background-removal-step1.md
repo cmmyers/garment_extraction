@@ -1,8 +1,9 @@
 ---
 layout: default
+title:  "Background Removal, Step 1"
+
 ---
 
-# Simple Background Subtraction
 
 All code is from a stripped-down version of my CompositeMask class; code [here](github.link)
 
