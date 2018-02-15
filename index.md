@@ -1,1 +1,5 @@
-<!--Hello, World-->
+---
+layout: default
+title:  "Test"
+
+---
