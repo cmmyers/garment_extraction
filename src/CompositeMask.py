@@ -7,7 +7,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 import utils
 
-path_to_opencv = '/Users/claremariemyers/Desktop/triage/opencv/'
+path_to_opencv = ''
 
 def rgb_to_bgr(image):
     r, g, b = cv2.split(image)
