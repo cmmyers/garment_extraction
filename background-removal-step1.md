@@ -40,13 +40,16 @@ def get_background_colors(self, num_points):
 
     return background_colors
 ```
-
+<div>
+<div>
 <table>
 <tr>
 <td><img src="img/bg-sub-orig-image.png" alt=""></td>
 <td><img src="img/bg-sub-random-pts.png" alt=""></td>
 </tr>
-</table>
+</table></div>
+
+
 
 <div><table>
 <tr>
@@ -64,6 +67,8 @@ def get_background_colors(self, num_points):
 <tr>
 <td><img src="img/color-block4.png" alt=""></td>
 </table></div>
+</div>
+
 
 <br>
 Some color blocks were variegated, while others were virtually monochromatic.
