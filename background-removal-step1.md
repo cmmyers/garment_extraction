@@ -41,12 +41,12 @@ def get_background_colors(self, num_points):
     return background_colors
 ```
 
-<div><table>
+<table>
 <tr>
 <td><img src="img/bg-sub-orig-image.png" alt=""></td>
 <td><img src="img/bg-sub-random-pts.png" alt=""></td>
 </tr>
-</table></div>
+</table>
 
 <div><table>
 <tr>
