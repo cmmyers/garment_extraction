@@ -7,7 +7,7 @@ title:  "Background Removal, Step 1"
 # Background Removal, Step 1
 
 
-All code is from a stripped-down version of my CompositeMask class; code [here](github.link)
+All code is from a stripped-down version of my CompositeMask class; code [here](https://github.com/cmmyers/garment_extraction/blob/master/src/CompositeMask.py)
 
 A clear first step toward isolating the garment is to remove the background. Most runway photos have a relatively simple background, although they can become cluttered by other models and audience members. Another complication is that the color of the garment can be similar to the color of the background.
 
