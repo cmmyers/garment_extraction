@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 import utils
 #import compositemaskmetrics as cmmts
 
-path_to_opencv = '/Users/clarecodes/Documents/opencv-3.4.5/'
+path_to_opencv = ''
 
 def rgb_to_bgr(image):
     r, g, b = cv2.split(image)
