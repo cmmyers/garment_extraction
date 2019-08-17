@@ -115,7 +115,7 @@ After a series of automated iterations, I found a threshold of 11 to be optimal 
 </tr>
 </table></div>
 
-Through this iterative process, measuring success against manually segmented images, I was able to achieve high levels of both precision and recall on several sample images to serve as a baseline model. (thresholds are 18, 22, and 26 respectively) (More on these success metrics in another post.)
+Through this iterative process, measuring success against manually segmented images, I was able to achieve high levels of both precision and recall on several sample images to serve as a baseline model. (thresholds are 18, 22, and 26 respectively) 
 
 <div>
 <table><tr><td><img src="img/samp4-orig.png" alt=""></td><td><img src="img/samp4-mask.png" alt=""></td></tr>
@@ -125,4 +125,4 @@ Through this iterative process, measuring success against manually segmented ima
 </table>
 </div>
 
-The goal, of course, is to find these optimal thresholds on unlabelled images. Further posts will explore potential inputs on which to train a model to this.
+
