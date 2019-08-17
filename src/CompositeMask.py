@@ -6,8 +6,9 @@ import random
 from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
 import utils
+#import compositemaskmetrics as cmmts
 
-path_to_opencv = '/Users/claremariemyers/Desktop/triage/opencv/'
+path_to_opencv = '/Users/clarecodes/Documents/opencv-3.4.5/'
 
 def rgb_to_bgr(image):
     r, g, b = cv2.split(image)
@@ -21,8 +22,8 @@ def bgr_to_rgb(image):
 class CompositeMask():
     def __init__(self, filename, bg_threshold = 0.4, face_threshold = 0.1, \
                                 num_bg_colors = 16, num_face_colors = 8, \
-                                test_ims_dir = 'data/test/', \
-                                seg_ims_dir = 'data/segmented/'):
+                                test_ims_dir = '../data/test/', \
+                                seg_ims_dir = '../data/segmented/'):
 
         self.segments_dict = {'background' : [[0, 0, 127], [127, 127, 255]], \
                             'garment' : [[127, 0, 0], [255, 127, 127]], \
@@ -44,16 +45,11 @@ class CompositeMask():
         #make background masks
         self.make_many_masks_bg()
         #add all background masks together
-        self.bg_composite_mask = sum(self.bg_masks)
-        #lay mask over original image
-        self.make_first_masked_image()
+        # print(self.bg_masks)
+        # self.bg_composite_mask = sum(self.bg_masks)
+        # #lay mask over original image
+        # self.make_first_masked_image()
 
-        #find the largest contour and draw it on the image
-        self.plot_largest_contour()
-        #make a mask with the contour
-        self.make_boolean_mask_from_contours()
-        #make a masked version of the image
-        self.make_contour_masked_image()
 
         #get the face palette from the original full-size image
         self.face, face_pal = self.find_skin_palette(self.test_im_path, path_to_opencv,\
@@ -70,6 +66,14 @@ class CompositeMask():
                                             self.face_composite_mask
 
         self.get_contours()
+        #find the largest contour and draw it on the image
+        self.plot_largest_contour()
+        #make a mask with the contour
+        self.make_boolean_mask_from_contours()
+        #make a masked version of the image
+        self.make_contour_masked_image()
+
+
 
     def load_and_resize_image(self, path):
         im = plt.imread(path)
@@ -99,7 +103,7 @@ class CompositeMask():
             background_colors.append(ave_color)
         for i in range(int(num_points/2)):
             row = np.random.choice(h)
-            col = np.random.choice(xrange(int((7*w/8)), w))
+            col = np.random.choice(range(int((7*w/8)), w))
             color_block = self.image[int(row-4):int(row+4), int(col-4):int(col+4)]
             ave_color = [self.avg_each_color(color_block, color) for color in ['red', 'green', 'blue']]
             background_colors.append(ave_color)
@@ -110,8 +114,8 @@ class CompositeMask():
         lower = np.array([(c - self.bg_threshold*c)*255 for c in three_colors])
         upper = np.array([(c + self.bg_threshold*c)*255 for c in three_colors])
         shapeMask = cv2.inRange(self.image, lower, upper)
-        contoured_img, contours, hierarchy =                             cv2.findContours(shapeMask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        return contoured_img
+        contoured_img = cv2.findContours(shapeMask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        return contoured_img[0]
 
     def make_many_masks_bg(self):
         self.bg_masks = []
@@ -146,7 +150,7 @@ class CompositeMask():
         im_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         im_gray = cv2.cvtColor(im_rgb, cv2.COLOR_BGR2GRAY)
         w, h = im_gray.shape
-        min_size = (w/20, h/20)
+        min_size = (int(w/20), int(h/20))
 
         face = cascade.detectMultiScale(im_gray, 1.1, 5, minSize=min_size)
 
@@ -302,7 +306,7 @@ class CompositeMask():
 
 
     def plot_largest_contour(self):
-
+        self.get_contours()
         largest_contour = max(cv2.contourArea(cnt) for cnt in self.contours)
         temp_im = self.image.copy()
         for c in self.contours:
@@ -335,6 +339,140 @@ class CompositeMask():
         new_image = new_image.astype('uint8')
         new_image = bgr_to_rgb(new_image)
         self.contour_masked_image = new_image
+
+
+
+
+#use OpenCV create a boolean mask by identifying all blue areas of the image
+#true blue is [0, 0, 255]; we want to catch a range just in case
+def make_boolean_mask(segmented_img):
+    low_bg = np.array([0, 0, 250])
+    high_bg = np.array([5, 5, 255])
+    return cv2.inRange(segmented_img, low_bg, high_bg)
+
+def cleanup_comp_mask(comp_mask):
+    temp = np.array([255 if p > 127 else 0 for p in comp_mask.flatten()])
+    return temp.reshape(300, 200)
+
+
+def build_comp_image_and_confusion_dict(image_mask, manual_mask):
+    '''
+    compares predictions (composite mask) to truth (segmented mask)
+    returns a new image with 4 levels: 255 for true background predictions
+                                       200 for figure predicted to be background
+                                       100 for background predicted to be figure
+                                       0 for true figure predictions
+
+    a dict represention of a confusion matrix
+    '''
+
+    confusion_dict = {'true_bg_pred_bg': 0, 'true_bg_pred_fig': 0, 'true_fig_pred_bg': 0, 'true_fig_pred_fig': 0}
+    new_image = []
+    for row_manual, row_cm in zip(manual_mask, image_mask):
+        for item_manual, item_cm in zip(row_manual, row_cm):
+            if item_manual == item_cm :
+                if item_manual == 255:
+                    new_image.append(255)
+                    confusion_dict['true_bg_pred_bg'] += 1
+                else:
+                    new_image.append(0)
+                    confusion_dict['true_fig_pred_fig'] += 1
+            else:
+                if item_manual > 200:
+                    new_image.append(100)
+                    confusion_dict['true_bg_pred_fig'] += 1
+                else:
+                    new_image.append(200)
+                    confusion_dict['true_fig_pred_bg'] += 1
+
+    return np.array(new_image).reshape(300, 200), confusion_dict
+
+def get_comparison_metrics(confusion_dict):
+    accuracy = (confusion_dict['true_bg_pred_bg'] + confusion_dict['true_fig_pred_fig']) / 60000.0
+    precision_of_fig = (confusion_dict['true_fig_pred_fig'] + 1)*1. / \
+            (confusion_dict['true_bg_pred_fig'] + confusion_dict['true_fig_pred_fig'] + 1)
+    recall_of_fig = (confusion_dict['true_fig_pred_fig'] + 1)*1. / \
+        (confusion_dict['true_fig_pred_bg'] + confusion_dict['true_fig_pred_fig'] + 1)
+    harmonic_mean = 2.*(precision_of_fig * recall_of_fig) / (precision_of_fig + recall_of_fig)
+    string_out = 'accuracy: ' + str(accuracy) + '\n'
+    string_out += 'precision: ' + str(precision_of_fig) + '\n'
+    string_out += 'recall: ' + str(recall_of_fig) + '\n'
+    string_out += 'harmonic mean: ' + str(harmonic_mean)
+    return accuracy, precision_of_fig, recall_of_fig, harmonic_mean, string_out
+
+def from_paths_to_conf_dict(path_to_orig, path_to_manual_seg, bg_thresh, face_thresh=0.1):
+
+    fig = plt.figure(figsize=(8, 3))
+
+    #create composite mask object
+    cm = CompositeMask(path_to_orig, bg_threshold=bg_thresh, face_threshold=face_thresh)
+    comp_mask = cleanup_comp_mask(cm.full_composite_mask)
+    fig.add_subplot(131)
+    plt.imshow(comp_mask)
+    #plt.show()
+
+
+    man_seg_img = cm.seg_image
+    manual_seg_mask = make_boolean_mask(man_seg_img)
+    fig.add_subplot(132)
+    plt.imshow(manual_seg_mask)
+    #plt.show()
+
+    truth_img, conf_dict = build_comp_image_and_confusion_dict(comp_mask, manual_seg_mask)
+    acc, prec, rec, harm, string_out = get_comparison_metrics(conf_dict)
+    fig.add_subplot(133)
+    plt.imshow(truth_img)
+    plt.show()
+
+    print(string_out)
+
+    return acc, prec, rec, harm
+
+def thorough_search(test_img, seg_img):
+    list_of_bests = []
+    for i in range(3):
+        best_t = search_for_best_thresh_bg(test_img, seg_img, [0.2, 0.4, 0.6, 0.8, 1.0])
+        for j in range(2,5):
+            print("best threshold so far ", best_t)
+            next_t = make_thresh_list(best_t, j)
+            print("what I will search on next ", next_t)
+            best_t = search_for_best_thresh(test_img, seg_img, next_t)
+        list_of_bests.append(best_t)
+
+def make_thresh_list(thresh, iteration):
+    min_t = thresh - thresh*(1./iteration)
+
+    max_t = thresh + thresh*(1./iteration)
+    print("min and max ", min_t, max_t)
+    return np.linspace(min_t, max_t, 5)
+
+def search_for_best_thresh_bg(test_img, seg_img, thresh_list):
+    maxf1 = 0
+    best_t = 0
+    for t in thresh_list:
+        acc, prec, rec, harm = from_paths_to_conf_dict(test_img, seg_img, t)
+        if harm > maxf1:
+            maxf1 = harm
+            best_t = t
+    return best_t
+
+def search_for_best_thresh_grid(test_img, seg_img, thresh_list_a, thresh_list_b):
+    maxf1 = 0
+    best_t = 0
+    for t in thresh_list_a:
+        for t2 in thresh_list_b:
+            print('bg_threshold = ', t)
+            print('face_threshold =', t2)
+            try:
+                acc, prec, rec, harm = from_paths_to_conf_dict(test_img, seg_img, t, t2)
+                if harm > maxf1:
+                    maxf1 = harm
+                    best_t1 = t
+                    best_t2 = t2
+            except ValueError:
+                continue
+    return best_t1, best_t2
+
 
 if __name__ == '__main__':
     pass

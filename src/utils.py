@@ -28,7 +28,7 @@ def make_palette_uniform_width(colors, title=None, figsize=(8,4)):
         plt.axis('off')
         plt.show()
     else:
-        print 'color list has length 0'
+        print('color list has length 0')
 
 
 
