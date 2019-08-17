@@ -1,1 +1,1 @@
-view content at https://claremarie.github.io/garment_extraction/
+view content at https://cmmyers.github.io/garment_extraction/
