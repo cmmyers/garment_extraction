@@ -13,7 +13,6 @@ For my first pass, I used a simple method of sampling random points in the backg
 Of course, the point is to not need manual intervention. How can I get a machine to decide which threshold is best? I will explore that in the next post.
 
 
-
 I found that this did a reasonably good job of eliminating the background while leaving the garment,
 
 [link](http://www.google.com)
