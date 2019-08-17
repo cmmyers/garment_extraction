@@ -1,11 +1,9 @@
 ---
 layout: default
 title:  "Background Removal, Step 1"
-
 ---
 
 # Background Removal, Step 1
-
 
 All code is from a stripped-down version of my CompositeMask class; code [here](https://github.com/cmmyers/garment_extraction/blob/master/src/CompositeMask.py)
 
@@ -14,7 +12,6 @@ A clear first step toward isolating the garment is to remove the background. Mos
 For my first pass, I used a simple method of sampling random points in the background and removing pixels that fell within a certain range of those points. I defined the background as vertical slices at the right and left edges of the image, with a width of 1/8 the total width of the image. (This is a very conservative width, as the figure tends to take up only the middle third of the image.) I then selected several random points in these regions (default is 16 points) and took 9 pixel by 9 pixel blocks and found the average color of each block. (Arithmetic mean of each of the three color channels.)
 
 ```python
-
 def avg_each_color(self, color_block, color_name):
     color_dict = {'red':0, 'green':1, 'blue':2}
     index = color_dict[color_name]
@@ -51,7 +48,6 @@ def get_background_colors(self, num_points):
 </tr>
 </table></div>
 
-
 <div><table>
 <tr>
 <td><img src="img/color-block1.png" alt=""></td>
@@ -67,8 +63,8 @@ def get_background_colors(self, num_points):
 </tr>
 <tr>
 <td><img src="img/color-block4.png" alt=""></td>
-
 </table></div>
+
 <br>
 Some color blocks were variegated, while others were virtually monochromatic.
 <br>
@@ -123,6 +119,5 @@ Through this iterative process, measuring success against manually segmented ima
 
 </table>
 </div>
-
 
 The goal, of course, is to find these optimal thresholds on unlabelled images. Further posts will explore potential inputs on which to train a model to this.
