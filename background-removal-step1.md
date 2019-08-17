@@ -69,13 +69,13 @@ def get_background_colors(self, num_points):
 <td><img src="img/color-block4.png" alt=""></td>
 
 </table></div>
-
+<br>
 Some color blocks were variegated, while others were virtually monochromatic.
-
+<br>
 I then used `OpenCV`'s `inRange` method to create a boolean mask locating colors within a certain range of the N average background colors. The range thresholds represent one of the parameters of my model; ultimately, the model will determine the optimal threshold itself based on intrinsic features of the image.
-
+<br>
 In the BGR model, each pixel is represented as a tuple of three integers between 0-255, or normalized as three decimals between 0 and 1. (I have found that some packages/methods will correctly infer either, while others require one or the other.) I used as my default threshold a range of 20 on either side--so, for example, if my original color was [210, 90, 120] I would mask all pixels falling within 190 and 230 on the blue channel, 70 and 110 on the green channel, and 100 and 140 on the red channel.
-
+<br>
 I created a mask for each of the 16 background colors picked out above.
 
 <div><table>
